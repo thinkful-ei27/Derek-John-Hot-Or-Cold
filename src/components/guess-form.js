@@ -5,7 +5,8 @@ import './guess-form.css';
 export default function GuessForm(props) {
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        props.handleClick();
+        const guess = Number(e.target.userGuess.value);
+        props.handleClick(guess);
     };
     return (
         <form onSubmit={(e) => handleFormSubmit(e)}>
