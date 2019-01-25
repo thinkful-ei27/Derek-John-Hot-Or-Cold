@@ -4,7 +4,7 @@ import Header from './header';
 import GuessSection from './guess-section';
 import GuessCount from './guess-count';
 import GuessList from './guess-list';
-// import Line from './chart'
+import {Bar} from 'react-chartjs-2';
 
 export default class Game extends React.Component {
     constructor(props) {
@@ -75,6 +75,16 @@ export default class Game extends React.Component {
                     handleChange={(value) => { this.setState({ guess: value }) }} />
                 <GuessCount count={this.state.guesses.length} />
                 <GuessList guesses={this.state.guesses} />
+                <Bar data={{
+                    labels: this.state.guesses.map((guess, index) => index),
+                    datasets: [{
+                        label: "Guesses So Far",
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: this.state.guesses,
+                    }]
+                    }} 
+                />
             </div>
         );
     }
