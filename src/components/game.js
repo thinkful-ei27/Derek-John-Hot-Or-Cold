@@ -12,11 +12,12 @@ export default class Game extends React.Component {
         this.initialState = {
             feedback: 'Make your guess!',
             guesses: [],
+            number1: 3,
             guess: '',
             showInfo: false,
             backgroundColor: 'hot'
         }
-        this.state = {...this.initialState, number: this.generateNumber()};
+        this.state = { ...this.initialState, number: this.generateNumber() };
     }
 
     generateNumber() {
@@ -32,10 +33,19 @@ export default class Game extends React.Component {
         const secret = this.state.number;
         // Will use later
         const prevGuess = this.state.guesses[this.state.guesses.length - 1];
-        return (Math.abs(secret - guess) < 10) ? this.setState({ feedback: 'Hot!', backgroundColor: 'hot' })
-            : (Math.abs(secret - guess) < 20) ? this.setState({ feedback: 'Kinda hot', backgroundColor: 'hot' })
-                : (Math.abs(secret - guess) < 30) ? this.setState({ feedback: 'Warm', backgroundColor: 'warm' })
-                    : this.setState({ feedback: 'Cold as ice', backgroundColor: 'cool' });
+        const temperature = (Math.abs(secret - guess) < 10) ? { feedback: 'Hot!', backgroundColor: 'hot' }
+        : (Math.abs(secret - guess) < 20) ? { feedback: 'Kinda hot', backgroundColor: 'hot' }
+            : (Math.abs(secret - guess) < 30) ? { feedback: 'Warm', backgroundColor: 'warm' }
+                : { feedback: 'Cold as ice', backgroundColor: 'cool' };
+        if (!prevGuess) {
+            return this.setState(temperature);
+        } else {
+            const prevGuessDistance = Math.abs(secret - prevGuess);
+            const currGuessDistance = Math.abs(secret - guess);
+            const status = currGuessDistance < prevGuessDistance ? 'warmer' : 'cooler';
+            return this.setState({...temperature, feedback: `You are getting ${status}. ${temperature.feedback}`});
+            // return this.setState({ feedback: `You are getting ${status}`, backgroundColor: 'cool' });
+        }
     }
 
     addGuessToState(guess) {
@@ -43,14 +53,14 @@ export default class Game extends React.Component {
     }
 
     toggleHelp() {
-        this.setState({showInfo: !this.state.showInfo});
+        this.setState({ showInfo: !this.state.showInfo });
     }
 
     render() {
         return (
             <div>
-                <Header 
-                    handleNewGame={() => this.setState({...this.initialState, number: this.generateNumber()})} 
+                <Header
+                    handleNewGame={() => this.setState({ ...this.initialState, number: this.generateNumber() })}
                     handleToggleHelp={() => this.toggleHelp()}
                     showHelp={this.state.showInfo}
                 />
@@ -62,7 +72,7 @@ export default class Game extends React.Component {
                         this.addGuessToState(guess)
                         this.checkGuess(guess)
                     }}
-                    handleChange={(value) => {this.setState({guess: value})}} />
+                    handleChange={(value) => { this.setState({ guess: value }) }} />
                 <GuessCount count={this.state.guesses.length} />
                 <GuessList guesses={this.state.guesses} />
             </div>
