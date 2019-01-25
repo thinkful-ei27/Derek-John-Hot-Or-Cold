@@ -4,6 +4,7 @@ import Header from './header';
 import GuessSection from './guess-section';
 import GuessCount from './guess-count';
 import GuessList from './guess-list';
+// import Line from './chart'
 
 export default class Game extends React.Component {
     constructor(props) {
@@ -11,7 +12,8 @@ export default class Game extends React.Component {
         this.initialState = {
             feedback: 'Make your guess!',
             guesses: [],
-            guess: ''
+            guess: '',
+            showInfo: false
         }
         this.state = {...this.initialState, number: this.generateNumber()};
     }
@@ -39,10 +41,18 @@ export default class Game extends React.Component {
         this.setState({ guesses: [...this.state.guesses, guess] });
     }
 
+    toggleHelp() {
+        this.setState({showInfo: !this.state.showInfo});
+    }
+
     render() {
         return (
             <div>
-                <Header handleNewGame={() => this.setState({...this.initialState, number: this.generateNumber()})} />
+                <Header 
+                    handleNewGame={() => this.setState({...this.initialState, number: this.generateNumber()})} 
+                    handleToggleHelp={() => this.toggleHelp()}
+                    showHelp={this.state.showInfo}
+                />
                 <GuessSection
                     feedback={this.state.feedback}
                     guessValue={this.state.guess}
