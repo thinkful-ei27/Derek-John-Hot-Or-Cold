@@ -13,7 +13,8 @@ export default class Game extends React.Component {
             feedback: 'Make your guess!',
             guesses: [],
             guess: '',
-            showInfo: false
+            showInfo: false,
+            backgroundColor: 'hot'
         }
         this.state = {...this.initialState, number: this.generateNumber()};
     }
@@ -24,17 +25,17 @@ export default class Game extends React.Component {
 
     checkGuess(guess) {
         // We can provide feedback, and add the guess to 'guesses'
-        return guess === this.state.number ? this.setState({ feedback: 'You won!' }) : this.hotterOrColder(guess);
+        return guess === this.state.number ? this.setState({ feedback: 'You won!', backgroundColor: 'winner' }) : this.hotterOrColder(guess);
     }
 
     hotterOrColder(guess) {
         const secret = this.state.number;
         // Will use later
         const prevGuess = this.state.guesses[this.state.guesses.length - 1];
-        return (Math.abs(secret - guess) < 10) ? this.setState({ feedback: 'Hot!' })
-            : (Math.abs(secret - guess) < 20) ? this.setState({ feedback: 'Kinda hot' })
-                : (Math.abs(secret - guess) < 30) ? this.setState({ feedback: 'Warm' })
-                    : this.setState({ feedback: 'Cold as ice' });
+        return (Math.abs(secret - guess) < 10) ? this.setState({ feedback: 'Hot!', backgroundColor: 'hot' })
+            : (Math.abs(secret - guess) < 20) ? this.setState({ feedback: 'Kinda hot', backgroundColor: 'hot' })
+                : (Math.abs(secret - guess) < 30) ? this.setState({ feedback: 'Warm', backgroundColor: 'warm' })
+                    : this.setState({ feedback: 'Cold as ice', backgroundColor: 'cool' });
     }
 
     addGuessToState(guess) {
@@ -55,6 +56,7 @@ export default class Game extends React.Component {
                 />
                 <GuessSection
                     feedback={this.state.feedback}
+                    backgroundColor={this.state.backgroundColor}
                     guessValue={this.state.guess}
                     handleClick={(guess) => {
                         this.addGuessToState(guess)
